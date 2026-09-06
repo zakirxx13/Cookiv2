@@ -18,24 +18,21 @@ async def scrape():
         
         page = await context.new_page()
         
-        # Listen for network requests
-        network_data = {
-            'requests': [],
-            'responses': [],
-            'cookies': [],
-            'timestamp': datetime.now().isoformat()
-        }
+        # Storage for network data
+        network_requests = []
+        network_responses = []
         
-        def handle_route(route, request):
-            network_data['requests'].append({
+        # Handle routes properly with await
+        async def handle_route(route, request):
+            network_requests.append({
                 'url': request.url,
                 'method': request.method,
                 'headers': dict(request.headers),
             })
-            route.continue_()
+            await route.continue_()  # FIXED: added await
         
         def handle_response(response):
-            network_data['responses'].append({
+            network_responses.append({
                 'url': response.url,
                 'status': response.status,
                 'headers': dict(response.headers),
@@ -44,25 +41,30 @@ async def scrape():
         await page.route("**/*", handle_route)
         page.on("response", handle_response)
         
-        # Navigate and wait for full load
+        # Navigate with longer timeout and less strict wait
         print("[*] Navigating to page...")
-        await page.goto(TARGET_URL, wait_until='networkidle')
+        try:
+            await page.goto(TARGET_URL, wait_until='domcontentloaded', timeout=60000)
+            print("[+] Page DOM loaded")
+        except Exception as e:
+            print(f"[!] Navigation warning: {e}")
+            # Try anyway
         
-        # Wait a bit more for JavaScript to set cookies
-        print("[*] Waiting for JavaScript cookies...")
-        await page.wait_for_timeout(5000)
+        # Wait for network to be mostly idle
+        print("[*] Waiting for network...")
+        await page.wait_for_timeout(8000)  # Wait 8 seconds for JS to run
         
         # Get all cookies
         cookies = await context.cookies()
         print(f"[+] Found {len(cookies)} cookies")
         
-        # Look for Edge-Cache-Cookie specifically
+        # Look for Edge-Cache-Cookie
         edge_cache_cookie = None
         for cookie in cookies:
+            print(f"  - {cookie['name']}: {cookie['value'][:30]}..." if len(cookie['value']) > 30 else f"  - {cookie['name']}: {cookie['value']}")
             if cookie['name'] == 'Edge-Cache-Cookie':
                 edge_cache_cookie = cookie
                 print(f"[+] FOUND Edge-Cache-Cookie!")
-                break
         
         # Save all cookies
         cookies_data = {
@@ -82,22 +84,20 @@ async def scrape():
                 f.write(f"Edge-Cache-Cookie={edge_cache_cookie['value']}\n\n")
                 f.write(f"Full cookie data:\n")
                 f.write(json.dumps(edge_cache_cookie, indent=2))
-            print(f"[+] Saved Edge-Cache-Cookie to edge_cache_cookie.txt")
+            print(f"[+] Saved Edge-Cache-Cookie")
         else:
             with open('edge_cache_cookie.txt', 'w') as f:
                 f.write("Edge-Cache-Cookie NOT FOUND\n\n")
-                f.write("Available cookies:\n")
+                f.write("All cookies found:\n")
                 for c in cookies:
-                    f.write(f"  - {c['name']}\n")
+                    f.write(f"{c['name']}={c['value'][:50]}\n")
             print("[-] Edge-Cache-Cookie not found")
         
-        # Get localStorage
-        local_storage = await page.evaluate("() => JSON.stringify(localStorage)")
+        # Get storage
+        local_storage = await page.evaluate("() => { try { return JSON.stringify(localStorage); } catch(e) { return '{}'; } }")
+        session_storage = await page.evaluate("() => { try { return JSON.stringify(sessionStorage); } catch(e) { return '{}'; } }")
         
-        # Get sessionStorage
-        session_storage = await page.evaluate("() => JSON.stringify(sessionStorage)")
-        
-        # Network summary
+        # Summary
         network_summary = {
             'timestamp': datetime.now().isoformat(),
             'url': TARGET_URL,
@@ -106,9 +106,9 @@ async def scrape():
             'edge_cache_cookie_value': edge_cache_cookie['value'] if edge_cache_cookie else None,
             'local_storage': json.loads(local_storage) if local_storage else {},
             'session_storage': json.loads(session_storage) if session_storage else {},
-            'network_requests': len(network_data['requests']),
-            'api_endpoints': [r['url'] for r in network_data['requests'] if 'api' in r['url'].lower()],
-            'cdn_requests': [r['url'] for r in network_data['requests'] if 'cdn' in r['url'].lower() or 'bldcm' in r['url'].lower()],
+            'network_requests': len(network_requests),
+            'api_endpoints': list(set([r['url'] for r in network_requests if 'api' in r['url'].lower()])),
+            'cdn_requests': list(set([r['url'] for r in network_requests if 'cdn' in r['url'].lower() or 'bldcm' in r['url'].lower()])),
         }
         
         with open('network_data.json', 'w') as f:
@@ -121,9 +121,9 @@ async def scrape():
         print(f"Total cookies: {len(cookies)}")
         print(f"Edge-Cache-Cookie: {'FOUND' if edge_cache_cookie else 'NOT FOUND'}")
         if edge_cache_cookie:
-            print(f"Cookie value preview: {edge_cache_cookie['value'][:50]}...")
-        print(f"Network requests: {len(network_data['requests'])}")
-        print(f"API endpoints found: {len(network_summary['api_endpoints'])}")
+            print(f"Cookie length: {len(edge_cache_cookie['value'])} chars")
+        print(f"Network requests: {len(network_requests)}")
+        print(f"API endpoints: {len(network_summary['api_endpoints'])}")
         print(f"CDN requests: {len(network_summary['cdn_requests'])}")
         print("="*60)
         
