@@ -1,0 +1,36 @@
+name: ToffeeLive Network Analysis
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          pip install requests selenium webdriver-manager beautifulsoup4
+      
+      - name: Run network analysis
+        run: python zoffee.py
+      
+      - name: Upload results
+        uses: actions/upload-artifact@v4
+        with:
+          name: network-analysis
+          path: |
+            cookies.json
+            network_data.json
+            api_endpoints.txt
+            headers.json
+          retention-days: 7
