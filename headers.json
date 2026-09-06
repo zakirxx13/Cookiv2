@@ -1,0 +1,29 @@
+{
+  "response_headers": {
+    "cache-control": "no-cache",
+    "link": "<https://toffeelive.com/en>; rel=\"alternate\"; hreflang=\"en\", <https://toffeelive.com/bn>; rel=\"alternate\"; hreflang=\"bn\", <https://toffeelive.com/>; rel=\"alternate\"; hreflang=\"x-default\", </_next/static/media/6ea8d1bb8ea4af7a-s.p.1kk_wfe381bov.woff2>; rel=preload; as=\"font\"; crossorigin=\"\"; type=\"font/woff2\", </_next/static/media/9e9f04e3c37952ab-s.p.0pan85mumqyf3.woff2>; rel=preload; as=\"font\"; crossorigin=\"\"; type=\"font/woff2\", </_next/static/media/ca31d6821328a4e9-s.p.2svk7cnw5x6df.woff2>; rel=preload; as=\"font\"; crossorigin=\"\"; type=\"font/woff2\", </_next/static/chunks/30_-gh1wq3qbv.css>; rel=preload; as=\"style\", </_next/static/chunks/08l3yr5js5hbe.css>; rel=preload; as=\"style\"",
+    "set-cookie": "country=US; Path=/, state=DHK; Path=/, allowed_countries=BD; Path=/, device_id=fb7cfa27-dc19-4de8-b425-74fcca813cda; Path=/; Expires=Mon, 11 Oct 2027 08:58:00 GMT; Max-Age=34560000, device_token=eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJodHRwczovL3RvZmZlZWxpdmUuY29tIiwiY291bnRyeSI6IlVTIiwiZF9pZCI6ImZlY2ZhNzVkLTM3ZTEtNDJjYi04ZDYyLTcyN2IyOTFjN2M0ZSIsImV4cCI6MTc5MTMxNDg4MCwiaWF0IjoxNzg4Njg1MDgwLCJpc3MiOiJ0b2ZmZWVsaXZlLmNvbSIsImp0aSI6IjEzYWUyOWRiLThhNTgtNGM1My1iYzM1LTY1MWMyMGU0YmE2Y18xNzg4Njg1MDgwIiwicHJvdmlkZXIiOiJ0b2ZmZWUiLCJyX2lkIjoiZmVjZmE3NWQtMzdlMS00MmNiLThkNjItNzI3YjI5MWM3YzRlIiwic19pZCI6ImZlY2ZhNzVkLTM3ZTEtNDJjYi04ZDYyLTcyN2IyOTFjN2M0ZSIsInRva2VuIjoiYWNjZXNzIiwidHlwZSI6ImRldmljZSJ9.Ksry-pAReyNM_QdqgGWLRr_5qhqlccbdcNBMsfNWkFml3GkH4b9stYAC67YI25AvCrSmI-Rk0QhmNxUIT2Kp9g; Path=/; Expires=Tue, 06 Oct 2026 19:28:00 GMT, device_refresh_token=eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiJodHRwczovL3RvZmZlZWxpdmUuY29tIiwiY291bnRyeSI6IlVTIiwiZF9pZCI6ImZlY2ZhNzVkLTM3ZTEtNDJjYi04ZDYyLTcyN2IyOTFjN2M0ZSIsImV4cCI6MTgwNDQ2Mzg4MCwiaWF0IjoxNzg4Njg1MDgwLCJpc3MiOiJ0b2ZmZWVsaXZlLmNvbSIsImp0aSI6IjEzYWUyOWRiLThhNTgtNGM1My1iYzM1LTY1MWMyMGU0YmE2Y18xNzg4Njg1MDgwIiwicHJvdmlkZXIiOiJ0b2ZmZWUiLCJyX2lkIjoiZmVjZmE3NWQtMzdlMS00MmNiLThkNjItNzI3YjI5MWM3YzRlIiwic19pZCI6ImZlY2ZhNzVkLTM3ZTEtNDJjYi04ZDYyLTcyN2IyOTFjN2M0ZSIsInRva2VuIjoicmVmcmVzaCIsInR5cGUiOiJkZXZpY2UifQ._XeYCIJHuoYGh88si92bMfWTy75IFEHsSL9Ou7zQ1zAxj_oZrIFrmRJslFN--KTSHyLoSn_GTaJb78puCJ7d1Q; Path=/; Expires=Sun, 07 Mar 2027 23:58:00 GMT",
+    "vary": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding",
+    "x-powered-by": "Next.js",
+    "content-type": "text/html; charset=utf-8",
+    "content-encoding": "gzip",
+    "date": "Sun, 06 Sep 2026 08:58:00 GMT",
+    "server": "Google Frontend",
+    "via": "1.1 google",
+    "Alt-Svc": "h3=\":443\"; ma=2592000",
+    "Transfer-Encoding": "chunked"
+  },
+  "request_headers": {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.0.36",
+    "Accept-Encoding": "gzip, deflate, br",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+    "Connection": "keep-alive",
+    "Accept-Language": "en-US,en;q=0.9",
+    "DNT": "1",
+    "Upgrade-Insecure-Requests": "1",
+    "Sec-Fetch-Dest": "document",
+    "Sec-Fetch-Mode": "navigate",
+    "Sec-Fetch-Site": "none",
+    "Cache-Control": "max-age=0"
+  }
+}
