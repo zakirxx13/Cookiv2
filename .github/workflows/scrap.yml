@@ -5,12 +5,17 @@ on:
     branches: [main]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   analyze:
     runs-on: ubuntu-latest
     
     steps:
       - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
       
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -18,13 +23,27 @@ jobs:
           python-version: '3.11'
       
       - name: Install dependencies
-        run: |
-          pip install requests selenium webdriver-manager beautifulsoup4
+        run: pip install requests beautifulsoup4
       
       - name: Run network analysis
         run: python zoffee.py
       
-      - name: Upload results
+      - name: Commit and push results
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          
+          # Check if there are changes
+          if [ -n "$(git status --porcelain)" ]; then
+            git add cookies.json network_data.json api_endpoints.txt headers.json
+            git commit -m "Update network analysis data [$(date +'%Y-%m-%d %H:%M:%S')]"
+            git push
+            echo "[+] Files committed and pushed to repo"
+          else
+            echo "[*] No changes to commit"
+          fi
+      
+      - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: network-analysis
