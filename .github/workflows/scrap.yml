@@ -11,30 +11,31 @@ permissions:
 jobs:
   analyze:
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-      
+
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      
-      - name: Install Playwright
+
+      - name: Install dependencies
         run: |
-          pip install playwright
+          python -m pip install --upgrade pip
+          python -m pip install requests playwright
           python -m playwright install chromium
-      
+
       - name: Run Playwright scraper
         run: python zoffee.py
-      
+
       - name: Commit and push results
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          
+
           if [ -n "$(git status --porcelain)" ]; then
             git add cookies.json network_data.json edge_cache_cookie.txt
             git commit -m "Update network analysis [$(date +'%Y-%m-%d %H:%M:%S')]"
@@ -42,7 +43,7 @@ jobs:
           else
             echo "No changes"
           fi
-      
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
