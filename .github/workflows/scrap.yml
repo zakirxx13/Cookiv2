@@ -8,14 +8,20 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: toffee-live-network-analysis
+  cancel-in-progress: false
+
 jobs:
   analyze:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -29,17 +35,22 @@ jobs:
           python -m playwright install chromium
 
       - name: Run Playwright scraper
-        run: python zoffee.py
+        run: |
+          python zoffee.py
 
       - name: Commit and push results
         run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
           if [ -n "$(git status --porcelain)" ]; then
             git add cookies.json network_data.json edge_cache_cookie.txt
+
             git commit -m "Update network analysis [$(date +'%Y-%m-%d %H:%M:%S')]"
-            git push
+
+            git pull --rebase origin main
+
+            git push origin main
           else
             echo "No changes"
           fi
@@ -52,3 +63,4 @@ jobs:
             cookies.json
             network_data.json
             edge_cache_cookie.txt
+          if-no-files-found: ignore
