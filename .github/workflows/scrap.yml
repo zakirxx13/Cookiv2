@@ -1,99 +1,47 @@
-name: ToffeeLive Network Analysis
+name: Cookie Detector
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
+  schedule:
+    - cron: "*/30 * * * *"
 
 permissions:
   contents: write
 
-concurrency:
-  group: toffeelive-network-analysis
-  cancel-in-progress: false
-
 jobs:
-  analyze:
+  scrape:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Setup Python
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
-          cache: "pip"
+          python-version: "3.12"
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          python -m pip install requests playwright
-          python -m playwright install --with-deps chromium
+          pip install requests
 
       - name: Run scraper
+        env:
+          TARGET_URL: ${{ secrets.TARGET_URL }}
         run: |
-          python zoffee.py
+          python scraper.py
 
-      - name: Prepare results
-        run: |
-          mkdir -p /tmp/toffeelive-results
-
-          if [ -f network_data.json ]; then
-            cp network_data.json /tmp/toffeelive-results/
-          fi
-
-          if [ -f edge_cache_cookie.txt ]; then
-            cp edge_cache_cookie.txt /tmp/toffeelive-results/
-          fi
-
-      - name: Sync with latest main
-        run: |
-          git fetch origin main
-
-          git reset --hard origin/main
-          git clean -fd
-
-      - name: Restore results
-        run: |
-          if [ -f /tmp/toffeelive-results/network_data.json ]; then
-            cp /tmp/toffeelive-results/network_data.json .
-          fi
-
-          if [ -f /tmp/toffeelive-results/edge_cache_cookie.txt ]; then
-            cp /tmp/toffeelive-results/edge_cache_cookie.txt .
-          fi
-
-      - name: Commit results
+      - name: Commit result
         run: |
           git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add network_data.json edge_cache_cookie.txt
+          git add cookie_result.json
 
           if git diff --cached --quiet; then
-            echo "No result changes to commit."
-            exit 0
+            echo "No changes to commit."
+          else
+            git commit -m "Update cookie detection"
+            git push
           fi
-
-          git commit -m "Update network analysis [$(date -u '+%Y-%m-%d %H:%M:%S UTC')]"
-
-      - name: Push results
-        run: |
-          git push origin HEAD:main
-
-      - name: Upload results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: network-analysis
-          path: |
-            cookies.json
-            network_data.json
-            edge_cache_cookie.txt
-          if-no-files-found: ignore
