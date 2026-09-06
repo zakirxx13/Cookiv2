@@ -6,7 +6,7 @@ import os
 from urllib.parse import urljoin, urlparse
 from datetime import datetime
 
-TARGET_URL = "https://toffeelive.com/en"
+TARGET_URL = "https://toffeelive.com/en/watch/Xi_Ga5oBNnOkwJLWkhKP"
 OUTPUT_DIR = "."
 
 def analyze_network():
