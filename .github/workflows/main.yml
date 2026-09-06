@@ -1,0 +1,139 @@
+name: ToffeeLive Scraper
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  schedule:
+    - cron: '0 */6 * * *'
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          pip install requests beautifulsoup4 selenium webdriver-manager
+      
+      - name: Run scraper
+        env:
+          TARGET_URL: "https://toffeelive.com/en"
+          CDN_URL_PREFIX: "https://bldcmprod-cdn.tofeellive.com"
+          CDN_EXPIRES: "1770454179"
+          CDN_KEY: "prod_linear"
+          CDN_SIG: "eZAqqnWnwkreQy5c7uw9GSU7ElCE8APAAroc3rDpwBgcZjzIne25gTFBtPcErPdPesVUTIdsrnTv2Fz783BDAA"
+        run: |
+          cat << 'PYEOF' > scraper.py
+          import requests
+          import json
+          import os
+          from urllib.parse import urlencode
+          
+          # Config
+          TARGET_URL = os.getenv('TARGET_URL')
+          CDN_PREFIX = os.getenv('CDN_URL_PREFIX')
+          CDN_EXPIRES = os.getenv('CDN_EXPIRES')
+          CDN_KEY = os.getenv('CDN_KEY')
+          CDN_SIG = os.getenv('CDN_SIG')
+          
+          # Build signed CDN URL
+          cdn_url = f"{CDN_PREFIX}:Expires={CDN_EXPIRES}:KeyName={CDN_KEY}:Signature={CDN_SIG}"
+          
+          session = requests.Session()
+          session.headers.update({
+              'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+              'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+              'Accept-Language': 'en-US,en;q=0.9',
+              'Accept-Encoding': 'gzip, deflate, br',
+              'DNT': '1',
+              'Connection': 'keep-alive',
+          })
+          
+          print(f"[*] Fetching {TARGET_URL}")
+          resp = session.get(TARGET_URL, timeout=30)
+          print(f"[+] Status: {resp.status_code}")
+          print(f"[+] Cookies received: {session.cookies.get_dict()}")
+          
+          # Save main page
+          with open('site.html', 'w', encoding='utf-8') as f:
+              f.write(resp.text)
+          
+          # Try to find stream URLs or API endpoints
+          import re
+          patterns = [
+              r'(https?://[^\s"\']+\.m3u8)',
+              r'(https?://[^\s"\']+\.mp4)',
+              r'(https?://[^\s"\']+\.ts)',
+              r'"streamUrl"\s*:\s*"([^"]+)"',
+              r'"playbackUrl"\s*:\s*"([^"]+)"',
+              r'api["\']?\s*:\s*["\']?(https?://[^"\']+)',
+          ]
+          
+          found_urls = []
+          for pattern in patterns:
+              matches = re.findall(pattern, resp.text)
+              found_urls.extend(matches)
+          
+          found_urls = list(set(found_urls))
+          print(f"[+] Found {len(found_urls)} potential stream/API URLs")
+          
+          # Try CDN URL
+          print(f"\n[*] Testing CDN URL...")
+          cdn_resp = session.get(cdn_url, stream=True, timeout=30)
+          print(f"[+] CDN Status: {cdn_resp.status_code}")
+          print(f"[+] CDN Content-Type: {cdn_resp.headers.get('Content-Type', 'unknown')}")
+          print(f"[+] CDN Size: {len(cdn_resp.content)} bytes")
+          
+          # Save CDN content if valid
+          if cdn_resp.status_code == 200:
+              ext = 'bin'
+              ct = cdn_resp.headers.get('Content-Type', '')
+              if 'mp4' in ct:
+                  ext = 'mp4'
+              elif 'mpegurl' in ct or 'm3u8' in ct:
+                  ext = 'm3u8'
+              elif 'html' in ct:
+                  ext = 'html'
+              
+              with open(f'cdn_content.{ext}', 'wb') as f:
+                  for chunk in cdn_resp.iter_content(chunk_size=8192):
+                      f.write(chunk)
+              print(f"[+] Saved CDN content as cdn_content.{ext}")
+          
+          # Save session data
+          session_data = {
+              'cookies': session.cookies.get_dict(),
+              'headers': dict(session.headers),
+              'found_urls': found_urls,
+              'cdn_status': cdn_resp.status_code,
+              'cdn_headers': dict(cdn_resp.headers)
+          }
+          
+          with open('session_data.json', 'w') as f:
+              json.dump(session_data, f, indent=2)
+          
+          print("\n[+] Done! Files saved:")
+          print("    - site.html")
+          print("    - session_data.json")
+          print("    - cdn_content.*")
+          PYEOF
+          
+          python scraper.py
+      
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: scrape-results
+          path: |
+            site.html
+            session_data.json
+            cdn_content.*
+          retention-days: 7
