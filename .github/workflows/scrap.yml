@@ -22,10 +22,12 @@ jobs:
         with:
           python-version: '3.11'
       
-      - name: Install dependencies
-        run: pip install requests beautifulsoup4
+      - name: Install Playwright
+        run: |
+          pip install playwright
+          python -m playwright install chromium
       
-      - name: Run network analysis
+      - name: Run Playwright scraper
         run: python zoffee.py
       
       - name: Commit and push results
@@ -33,14 +35,12 @@ jobs:
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           
-          # Check if there are changes
           if [ -n "$(git status --porcelain)" ]; then
-            git add cookies.json network_data.json api_endpoints.txt headers.json
-            git commit -m "Update network analysis data [$(date +'%Y-%m-%d %H:%M:%S')]"
+            git add cookies.json network_data.json edge_cache_cookie.txt
+            git commit -m "Update network analysis [$(date +'%Y-%m-%d %H:%M:%S')]"
             git push
-            echo "[+] Files committed and pushed to repo"
           else
-            echo "[*] No changes to commit"
+            echo "No changes"
           fi
       
       - name: Upload artifacts
@@ -50,6 +50,4 @@ jobs:
           path: |
             cookies.json
             network_data.json
-            api_endpoints.txt
-            headers.json
-          retention-days: 7
+            edge_cache_cookie.txt
