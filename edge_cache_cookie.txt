@@ -8,8 +8,8 @@ allowed_countries
 device_id
 device_token
 device_refresh_token
-mp_6019860d585d6c9cc82edba9d456e36c_mixpanel
 _fbp
+mp_6019860d585d6c9cc82edba9d456e36c_mixpanel
 WZRK_G
 WZRK_S_R57-668-777Z
 _gcl_au
