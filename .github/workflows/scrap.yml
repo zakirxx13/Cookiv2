@@ -1,41 +1,85 @@
-import json
-from pathlib import Path
+name: Edge Cache Cookie Check
 
-import requests
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "*/30 * * * *"
 
+permissions:
+  contents: write
 
-TARGET_URL = "https://toffeelive.com/en/watch/Xi_Ga5oBNnOkwJLWkhKP"
-COOKIE_NAME = "Edge-Cache-Cookie"
+jobs:
+  cookie-check:
+    runs-on: ubuntu-latest
 
-OUTPUT_FILE = Path("cookie_result.json")
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
 
-def check_cookie():
-    response = requests.get(
-        TARGET_URL,
-        timeout=30,
-        allow_redirects=True,
-        headers={
-            "User-Agent": "Mozilla/5.0"
-        },
-    )
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
 
-    found = any(
-        cookie.name == COOKIE_NAME
-        for cookie in response.cookies
-    )
+      - name: Create scraper
+        run: |
+          cat > scraper.py <<'PY'
+          import json
+          from pathlib import Path
 
-    result = {
-        COOKIE_NAME: "[REDACTED]" if found else None
-    }
+          import requests
 
-    OUTPUT_FILE.write_text(
-        json.dumps(result, indent=2),
-        encoding="utf-8",
-    )
+          TARGET_URL = "https://toffeelive.com/en/watch/Xi_Ga5oBNnOkwJLWkhKP"
+          COOKIE_NAME = "Edge-Cache-Cookie"
+          OUTPUT_FILE = Path("cookie_result.json")
 
-    print(json.dumps(result, indent=2))
+          response = requests.get(
+              TARGET_URL,
+              timeout=30,
+              allow_redirects=True,
+              headers={
+                  "User-Agent": "Mozilla/5.0"
+              },
+          )
 
+          found = any(
+              cookie.name == COOKIE_NAME
+              for cookie in response.cookies
+          )
 
-if __name__ == "__main__":
-    check_cookie()
+          result = {
+              COOKIE_NAME: "[REDACTED]" if found else None
+          }
+
+          OUTPUT_FILE.write_text(
+              json.dumps(result, indent=2),
+              encoding="utf-8",
+          )
+
+          print(json.dumps(result, indent=2))
+          PY
+
+      - name: Run cookie checker
+        run: python scraper.py
+
+      - name: Commit and push result
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add cookie_result.json
+
+          if git diff --cached --quiet; then
+            echo "No changes detected."
+            exit 0
+          fi
+
+          git commit -m "Update cookie detection"
+          git push origin HEAD:main
