@@ -26,7 +26,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: "3.11"
 
       - name: Install dependencies
         run: |
@@ -44,13 +44,22 @@ jobs:
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
           if [ -n "$(git status --porcelain)" ]; then
-            git add cookies.json network_data.json edge_cache_cookie.txt
 
-            git commit -m "Update network analysis [$(date +'%Y-%m-%d %H:%M:%S')]"
+            # Only commit non-sensitive result files
+            git add network_data.json edge_cache_cookie.txt
 
-            git pull --rebase origin main
+            if ! git diff --cached --quiet; then
+              git commit -m "Update network analysis [$(date +'%Y-%m-%d %H:%M:%S')]"
+            fi
+
+            # Get latest remote changes
+            git fetch origin main
+
+            # Rebase local commit onto latest main
+            git rebase origin/main
 
             git push origin main
+
           else
             echo "No changes"
           fi
