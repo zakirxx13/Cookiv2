@@ -1,131 +1,139 @@
 #!/usr/bin/env python3
 import json
 import asyncio
+import requests
 from playwright.async_api import async_playwright
 from datetime import datetime
 
 TARGET_URL = "https://toffeelive.com/en"
+API_BASE = "https://api.toffeelive.com"
 
 async def scrape():
-    print(f"[*] Starting Playwright scraper for {TARGET_URL}")
+    print(f"[*] Starting Playwright scraper")
     
     async with async_playwright() as p:
         browser = await p.chromium.launch(headless=True)
         context = await browser.new_context(
-            user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
             viewport={'width': 1920, 'height': 1080},
         )
         
         page = await context.new_page()
         
-        # Storage for network data
-        network_requests = []
-        network_responses = []
+        # Navigate to main page first
+        print("[*] Loading main page...")
+        await page.goto(TARGET_URL, wait_until='domcontentloaded', timeout=60000)
+        await page.wait_for_timeout(3000)
         
-        # Handle routes properly with await
-        async def handle_route(route, request):
-            network_requests.append({
-                'url': request.url,
-                'method': request.method,
-                'headers': dict(request.headers),
-            })
-            await route.continue_()  # FIXED: added await
-        
-        def handle_response(response):
-            network_responses.append({
-                'url': response.url,
-                'status': response.status,
-                'headers': dict(response.headers),
-            })
-        
-        await page.route("**/*", handle_route)
-        page.on("response", handle_response)
-        
-        # Navigate with longer timeout and less strict wait
-        print("[*] Navigating to page...")
-        try:
-            await page.goto(TARGET_URL, wait_until='domcontentloaded', timeout=60000)
-            print("[+] Page DOM loaded")
-        except Exception as e:
-            print(f"[!] Navigation warning: {e}")
-            # Try anyway
-        
-        # Wait for network to be mostly idle
-        print("[*] Waiting for network...")
-        await page.wait_for_timeout(8000)  # Wait 8 seconds for JS to run
-        
-        # Get all cookies
+        # Get initial cookies
         cookies = await context.cookies()
-        print(f"[+] Found {len(cookies)} cookies")
+        print(f"[+] Found {len(cookies)} initial cookies")
+        
+        # Find device_token
+        device_token = None
+        for c in cookies:
+            if c['name'] == 'device_token':
+                device_token = c['value']
+                print(f"[+] Found device_token")
+                break
+        
+        # Try to fetch stream data using API
+        if device_token:
+            print("[*] Trying to fetch stream data via API...")
+            try:
+                # Use requests with the device_token
+                headers = {
+                    'Authorization': f'Bearer {device_token}',
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
+                    'Accept': 'application/json',
+                    'Origin': 'https://toffeelive.com',
+                    'Referer': 'https://toffeelive.com/',
+                }
+                
+                # Try to get live streams or featured content
+                resp = requests.get(
+                    f'{API_BASE}/api/v2/contents/featured?country=BD&page=1&limit=10',
+                    headers=headers,
+                    timeout=30
+                )
+                print(f"[+] API status: {resp.status_code}")
+                
+                if resp.status_code == 200:
+                    data = resp.json()
+                    print(f"[+] API response keys: {list(data.keys()) if isinstance(data, dict) else 'list'}")
+                    
+                    # Save API response
+                    with open('api_response.json', 'w') as f:
+                        json.dump(data, f, indent=2)
+                    
+                    # Try to find stream URLs
+                    stream_urls = []
+                    if isinstance(data, dict) and 'data' in data:
+                        for item in data['data']:
+                            if isinstance(item, dict):
+                                url = item.get('stream_url') or item.get('playback_url') or item.get('url')
+                                if url:
+                                    stream_urls.append(url)
+                                    print(f"[+] Found stream URL: {url[:80]}...")
+                    
+                    # Navigate to first stream URL to trigger Edge-Cache-Cookie
+                    if stream_urls:
+                        print(f"[*] Navigating to stream URL to trigger cookie...")
+                        await page.goto(stream_urls[0], wait_until='domcontentloaded', timeout=30000)
+                        await page.wait_for_timeout(5000)
+                        
+            except Exception as e:
+                print(f"[!] API error: {e}")
+        
+        # Also try navigating to a CDN URL directly
+        print("[*] Trying direct CDN access...")
+        cdn_test_url = "https://bldcmprod-cdn.tofeellive.com/Expires=1770454179/KeyName=prod_linear/Signature=eZAqqnWnwkreQy5c7uw9GSU7ElCE8APAAroc3rDpwBgcZjzIne25gTFBtPcErPdPesVUTIdsrnTv2Fz783BDAA"
+        
+        try:
+            await page.goto(cdn_test_url, wait_until='domcontentloaded', timeout=30000)
+            await page.wait_for_timeout(3000)
+        except Exception as e:
+            print(f"[!] CDN navigation: {e}")
+        
+        # Get all cookies again after navigation
+        final_cookies = await context.cookies()
+        print(f"[+] Total cookies after navigation: {len(final_cookies)}")
         
         # Look for Edge-Cache-Cookie
         edge_cache_cookie = None
-        for cookie in cookies:
-            print(f"  - {cookie['name']}: {cookie['value'][:30]}..." if len(cookie['value']) > 30 else f"  - {cookie['name']}: {cookie['value']}")
+        for cookie in final_cookies:
             if cookie['name'] == 'Edge-Cache-Cookie':
                 edge_cache_cookie = cookie
                 print(f"[+] FOUND Edge-Cache-Cookie!")
+                print(f"    Value: {cookie['value'][:100]}...")
+                break
         
-        # Save all cookies
-        cookies_data = {
+        # Save results
+        result = {
             'timestamp': datetime.now().isoformat(),
-            'url': TARGET_URL,
-            'total_cookies': len(cookies),
-            'cookies': cookies,
-            'edge_cache_cookie': edge_cache_cookie
+            'total_cookies': len(final_cookies),
+            'cookies': {c['name']: c['value'] for c in final_cookies},
+            'edge_cache_cookie': edge_cache_cookie,
+            'device_token': device_token is not None
         }
         
         with open('cookies.json', 'w') as f:
-            json.dump(cookies_data, f, indent=2)
+            json.dump(result, f, indent=2)
         
-        # Save Edge-Cache-Cookie separately
         if edge_cache_cookie:
             with open('edge_cache_cookie.txt', 'w') as f:
-                f.write(f"Edge-Cache-Cookie={edge_cache_cookie['value']}\n\n")
-                f.write(f"Full cookie data:\n")
+                f.write(f"Edge-Cache-Cookie={edge_cache_cookie['value']}\n")
+                f.write(f"\nFull details:\n")
                 f.write(json.dumps(edge_cache_cookie, indent=2))
-            print(f"[+] Saved Edge-Cache-Cookie")
+            print("[+] Saved Edge-Cache-Cookie!")
         else:
             with open('edge_cache_cookie.txt', 'w') as f:
                 f.write("Edge-Cache-Cookie NOT FOUND\n\n")
                 f.write("All cookies found:\n")
-                for c in cookies:
-                    f.write(f"{c['name']}={c['value'][:50]}\n")
+                for c in final_cookies:
+                    f.write(f"{c['name']}\n")
             print("[-] Edge-Cache-Cookie not found")
-        
-        # Get storage
-        local_storage = await page.evaluate("() => { try { return JSON.stringify(localStorage); } catch(e) { return '{}'; } }")
-        session_storage = await page.evaluate("() => { try { return JSON.stringify(sessionStorage); } catch(e) { return '{}'; } }")
-        
-        # Summary
-        network_summary = {
-            'timestamp': datetime.now().isoformat(),
-            'url': TARGET_URL,
-            'cookies_found': len(cookies),
-            'edge_cache_cookie_found': edge_cache_cookie is not None,
-            'edge_cache_cookie_value': edge_cache_cookie['value'] if edge_cache_cookie else None,
-            'local_storage': json.loads(local_storage) if local_storage else {},
-            'session_storage': json.loads(session_storage) if session_storage else {},
-            'network_requests': len(network_requests),
-            'api_endpoints': list(set([r['url'] for r in network_requests if 'api' in r['url'].lower()])),
-            'cdn_requests': list(set([r['url'] for r in network_requests if 'cdn' in r['url'].lower() or 'bldcm' in r['url'].lower()])),
-        }
-        
-        with open('network_data.json', 'w') as f:
-            json.dump(network_summary, f, indent=2)
-        
-        # Print summary
-        print("\n" + "="*60)
-        print("PLAYWRIGHT SCRAPE SUMMARY")
-        print("="*60)
-        print(f"Total cookies: {len(cookies)}")
-        print(f"Edge-Cache-Cookie: {'FOUND' if edge_cache_cookie else 'NOT FOUND'}")
-        if edge_cache_cookie:
-            print(f"Cookie length: {len(edge_cache_cookie['value'])} chars")
-        print(f"Network requests: {len(network_requests)}")
-        print(f"API endpoints: {len(network_summary['api_endpoints'])}")
-        print(f"CDN requests: {len(network_summary['cdn_requests'])}")
-        print("="*60)
+            print("    Cookies found:", [c['name'] for c in final_cookies])
         
         await browser.close()
 
