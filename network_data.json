@@ -1,7 +1,7 @@
 {
-  "timestamp": "2026-09-06T09:16:05.707074",
+  "timestamp": "2026-09-06T09:16:58.242715",
   "url": "https://toffeelive.com/en",
-  "cookies_found": 14,
+  "cookies_found": 15,
   "edge_cache_cookie_found": false,
   "edge_cache_cookie_value": null,
   "local_storage": {
@@ -9,41 +9,40 @@
     "persist:toffee_store": "{\"ui\":\"{\\\"collectionPageTitle\\\":null,\\\"player\\\":{\\\"id\\\":null,\\\"volume\\\":1,\\\"isMuted\\\":false,\\\"startTime\\\":0,\\\"currentTime\\\":0}}\",\"cart\":\"{\\\"sourceUrl\\\":null,\\\"sourceVideoId\\\":null,\\\"productId\\\":null,\\\"activeScreen\\\":\\\"PLAN\\\",\\\"preLoginScreen\\\":null,\\\"activeTab\\\":\\\"CONTENT_ACCESS\\\",\\\"voucher\\\":null,\\\"selectedPlan\\\":null,\\\"paymentStatus\\\":null}\",\"_persist\":\"{\\\"version\\\":4,\\\"rehydrated\\\":true}\"}",
     "WZRK_TV_CONTROLS": "false",
     "WZRK_APPLICATION_SERVER_KEY_RECIEVED": "true",
-    "_gcl_ls": "{\"schema\":\"gcl\",\"version\":1,\"gcl_ctr\":{\"value\":{\"value\":0,\"timeouts\":0,\"errors\":0,\"eopCount\":0,\"creationTimeMs\":1788686160680},\"expires\":1796462160680}}",
-    "WZRK_ARP": "%7B%22j_n%22%3A%22Zw%3D%3D%22%2C%22i_n%22%3A%22ZW9gewIIAAw%3D%22%2C%22d_ts%22%3A0%2C%22dh%22%3A0%2C%22v%22%3A2%2C%22j_s%22%3A%22%7B%7D%22%2C%22id%22%3A%22R57-668-777Z%22%2C%22r_ts%22%3A1788686159%7D",
-    "WZRK_META": "%7B%22useIP%22%3Atrue%2C%22ps%22%3A1788686159%2C%22cs%22%3A1788686159%2C%22sc%22%3A1%7D",
-    "WZRK_CAMP_G": "%7B%2297222a25aedd4cf4a942b1256aa4a349%22%3A%7B%22woc%22%3A%7B%7D%2C%22wndoc%22%3A%7B%7D%2C%22wi%22%3A%7B%7D%2C%22wp%22%3A%7B%7D%2C%22wsc%22%3A0%2C%22wndsc%22%3A0%7D%7D",
-    "WZRK_EV": "%7B%22wzrk_fetch%22%3A%5B1%2C1788686159%2C1788686159%5D%2C%22page_viewed%22%3A%5B1%2C1788686159%2C1788686159%5D%7D",
-    "lastExternalReferrerTime": "1788686160224",
+    "_gcl_ls": "{\"schema\":\"gcl\",\"version\":1,\"gcl_ctr\":{\"value\":{\"value\":0,\"timeouts\":0,\"errors\":0,\"eopCount\":0,\"creationTimeMs\":1788686213648},\"expires\":1796462213648}}",
+    "WZRK_ARP": "%7B%22j_n%22%3A%22Zw%3D%3D%22%2C%22i_n%22%3A%22ZW9jfQMBCAc%3D%22%2C%22d_ts%22%3A0%2C%22dh%22%3A0%2C%22v%22%3A2%2C%22j_s%22%3A%22%7B%7D%22%2C%22id%22%3A%22R57-668-777Z%22%2C%22r_ts%22%3A1788686212%7D",
+    "WZRK_META": "%7B%22useIP%22%3Atrue%2C%22ps%22%3A1788686212%2C%22cs%22%3A1788686212%2C%22sc%22%3A1%7D",
+    "WZRK_CAMP_G": "%7B%227d2a1c701dcf4636826bfce69ba1da6a%22%3A%7B%22woc%22%3A%7B%7D%2C%22wndoc%22%3A%7B%7D%2C%22wi%22%3A%7B%7D%2C%22wp%22%3A%7B%7D%2C%22wsc%22%3A0%2C%22wndsc%22%3A0%7D%7D",
+    "WZRK_EV": "%7B%22wzrk_fetch%22%3A%5B1%2C1788686211%2C1788686211%5D%2C%22page_viewed%22%3A%5B1%2C1788686212%2C1788686212%5D%7D",
+    "lastExternalReferrerTime": "1788686214155",
     "WZRK_BLOCK": "false",
     "WZRK_ACCOUNT_ID": "%22R57-668-777Z%22",
     "lastExternalReferrer": "empty",
-    "WZRK_G": "%2297222a25aedd4cf4a942b1256aa4a349%22",
+    "WZRK_G": "%227d2a1c701dcf4636826bfce69ba1da6a%22",
     "__mpq_6019860d585d6c9cc82edba9d456e36c_ev": "[]",
     "WZRK_CAMP": "%7B%22woc%22%3A%7B%7D%2C%22wndoc%22%3A%7B%7D%2C%22wi%22%3A%7B%7D%2C%22wp%22%3A%7B%7D%2C%22wsc%22%3A0%2C%22wndsc%22%3A0%7D"
   },
   "session_storage": {
-    "mp_tab_id_mixpanel_6019860d585d6c9cc82edba9d456e36c": "$tab-499acb36-c55a-4712-8bfe-0483fc81c8ef",
+    "mp_tab_id_mixpanel_6019860d585d6c9cc82edba9d456e36c": "$tab-06c79d69-2846-4b9c-bfd5-b85d8189ff7a",
     "mp_gen_new_tab_id_mixpanel_6019860d585d6c9cc82edba9d456e36c": "1",
-    "sentryReplaySession": "{\"id\":\"16e95d41d391416e892cd9baf9ba90b3\",\"started\":1788686158995,\"lastActivity\":1788686159309,\"segmentId\":0,\"sampled\":\"buffer\",\"dirty\":false}"
+    "sentryReplaySession": "{\"id\":\"118d82e482cf402399c76d8431513eed\",\"started\":1788686211966,\"lastActivity\":1788686212097,\"segmentId\":0,\"sampled\":\"buffer\",\"dirty\":false}"
   },
   "network_requests": 129,
   "api_endpoints": [
-    "https://analytics.google.com/g/collect?v=2&tid=G-02M4D9SN5F&gtm=45je6921v9189838959za200zb9193602521zd9193602521&_p=1788686157675&gcd=13l3l3l3l1l1&npa=0&dma=0&ecid=699677495&_eu=AAAAAGQC&_fid=c_xToy4ExQbk2uk67ZWnK1&are=1&cid=978164382.1788686161&frm=0&pscdl=noapi&rcb=10&sr=1920x1080&uaa=x86&uab=64&uafvl=Not%253DA%253FBrand%3B99.0.0.0%7CHeadlessChrome%3B151.0.7922.34%7CChromium%3B151.0.7922.34&uam=&uamb=0&uap=Windows&uapv=10.0&uaw=0&ul=en&gaf=2&_s=2&tag_exp=115616986~115938465~115938469~118131809~118897920~118897930~119381663~120213116~120385422~120469145~120469153&dt=Toffee%20-%20Watch%20Live%20TV%2C%20Sports%2C%20Movies%2C%20Web%20Series%2C%20Drama&dp=%2F&sid=1788686160&sct=1&seg=0&dl=https%3A%2F%2Ftoffeelive.com%2Fen&en=page_viewed&_ee=1&ep.origin=firebase&ep.provider_id=toffee&ep.app_name=toffee-web-app&ep.app_version=5.1.0&ep.device_id=1eb48e3c-d152-4852-8415-f6ed00170153&ep.subscriber_type=ANONYMOUS&ep.connection=cellular&ep.page_name=Homepage&ep.page_url=https%3A%2F%2Ftoffeelive.com%2F&_et=4&tfd=9738",
-    "https://firebase.googleapis.com/v1alpha/projects/-/apps/1:531986530681:web:32347312feca0d5dc62fa8/webConfig",
-    "https://analytics.google.com/g/collect?v=2&tid=G-02M4D9SN5F&gtm=45je6921v9189838959za200zb9193602521zd9193602521&_p=1788686157675&_gaz=1&gcd=13l3l3l3l1l1&npa=0&dma=0&ecid=699677495&_eu=AAAAAGAC&_fid=c_xToy4ExQbk2uk67ZWnK1&_prs=ok&are=1&cid=978164382.1788686161&ec_mode=a&frm=0&pscdl=noapi&rcb=10&sr=1920x1080&uaa=x86&uab=64&uafvl=Not%253DA%253FBrand%3B99.0.0.0%7CHeadlessChrome%3B151.0.7922.34%7CChromium%3B151.0.7922.34&uam=&uamb=0&uap=Windows&uapv=10.0&uaw=0&ul=en-us&gaf=2&_s=1&tag_exp=115616986~115938465~115938469~118131809~118897920~118897930~119381663~120213116~120385422~120469145~120469153&sid=1788686160&sct=1&seg=0&dl=https%3A%2F%2Ftoffeelive.com%2Fen&dt=Toffee%20-%20Watch%20Live%20TV%2C%20Sports%2C%20Movies%2C%20Web%20Series%2C%20Drama&en=page_view&_fv=1&_nsi=1&_ss=2&_ee=1&ep.origin=firebase&tfd=4731",
-    "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCv82eHAx0LaNvcJqOwumExKJen0_CzT1M",
-    "https://o4511211351048192.ingest.us.sentry.io/api/4511211354783744/envelope/?sentry_version=7&sentry_key=b158ba672c4816c059e853ae245a877d&sentry_client=sentry.javascript.nextjs%2F10.48.0",
-    "https://www.google.com/measurement/conversion?random=1788686160659&cv=11&tid=G-02M4D9SN5F&fst=1788686160659&fmt=8&en=session_start&gtm=45je6921v9189838959za200zb9193602521zd9193602521xec&gcd=13l3l3l3l1l1&dma=0&tag_exp=115616986~115938465~115938469~118131809~118897920~118897930~119381663~120213116~120385422~120469145~120469153&u_w=1920&u_h=1080&url=https%3A%2F%2Ftoffeelive.com%2Fen&gacid=978164382.1788686161&frm=0&tiba=Toffee%20-%20Watch%20Live%20TV%2C%20Sports%2C%20Movies%2C%20Web%20Series%2C%20Drama&gtm_ee=1&npa=0&pscdl=noapi&auid=1077613977.1788686161&uaa=x86&uab=64&uafvl=Not%253DA%253FBrand%3B99.0.0.0%7CHeadlessChrome%3B151.0.7922.34%7CChromium%3B151.0.7922.34&uamb=0&uam=&uap=Windows&uapv=10.0&uaw=0&rcb=10",
     "https://firebaseinstallations.googleapis.com/v1/projects/prj-tof-analytics/installations",
-    "https://api-js.mixpanel.com/track/?verbose=1&ip=1&_=1788686164059",
+    "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCv82eHAx0LaNvcJqOwumExKJen0_CzT1M",
+    "https://firebase.googleapis.com/v1alpha/projects/-/apps/1:531986530681:web:32347312feca0d5dc62fa8/webConfig",
+    "https://api-js.mixpanel.com/track/?verbose=1&ip=1&_=1788686217048",
+    "https://analytics.google.com/g/collect?v=2&tid=G-02M4D9SN5F&gtm=45je6921v9189838959za200zb9193602521zd9193602521&_p=1788686210217&_gaz=1&gcd=13l3l3l3l1l1&npa=0&dma=0&ecid=1274401458&_eu=AAAAAGAC&_fid=c4Z0GhEHJAoF1nNiAPiLXq&_prs=ok&are=1&cid=1376954679.1788686214&ec_mode=a&frm=0&pscdl=noapi&rcb=2&sr=1920x1080&uaa=x86&uab=64&uafvl=Not%253DA%253FBrand%3B99.0.0.0%7CHeadlessChrome%3B151.0.7922.34%7CChromium%3B151.0.7922.34&uam=&uamb=0&uap=Windows&uapv=10.0&uaw=0&ul=en-us&gaf=2&_s=1&tag_exp=115938465~115938468~118897920~118897930~120213116~120385422~120469145~120469153~120914214&sid=1788686213&sct=1&seg=0&dl=https%3A%2F%2Ftoffeelive.com%2Fen&dt=Toffee%20-%20Watch%20Live%20TV%2C%20Sports%2C%20Movies%2C%20Web%20Series%2C%20Drama&en=page_view&_fv=1&_nsi=1&_ss=2&_ee=1&ep.origin=firebase&tfd=5638",
+    "https://o4511211351048192.ingest.us.sentry.io/api/4511211354783744/envelope/?sentry_version=7&sentry_key=b158ba672c4816c059e853ae245a877d&sentry_client=sentry.javascript.nextjs%2F10.48.0",
+    "https://www.google.com/measurement/conversion?random=1788686213627&cv=11&tid=G-02M4D9SN5F&fst=1788686213627&fmt=8&en=session_start&gtm=45je6921v9189838959za200zb9193602521zd9193602521xec&gcd=13l3l3l3l1l1&dma=0&tag_exp=115938465~115938468~118897920~118897930~120213116~120385422~120469145~120469153~120914214&u_w=1920&u_h=1080&url=https%3A%2F%2Ftoffeelive.com%2Fen&gacid=1376954679.1788686214&frm=0&tiba=Toffee%20-%20Watch%20Live%20TV%2C%20Sports%2C%20Movies%2C%20Web%20Series%2C%20Drama&gtm_ee=1&npa=0&pscdl=noapi&auid=370939247.1788686214&uaa=x86&uab=64&uafvl=Not%253DA%253FBrand%3B99.0.0.0%7CHeadlessChrome%3B151.0.7922.34%7CChromium%3B151.0.7922.34&uamb=0&uam=&uap=Windows&uapv=10.0&uaw=0&rcb=2",
     "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=AIzaSyCv82eHAx0LaNvcJqOwumExKJen0_CzT1M"
   ],
   "cdn_requests": [
-    "https://cms-cdn-bucket-prod.lionmultiverse.com/Media/ANOMIEY_2026_MML_Portrait_poster_0461d05e4a.jpg",
-    "https://cms-cdn-bucket-prod.lionmultiverse.com/Media/BLACKBOXY_2026_MEN_Portrait_poster_0998829382.jpg",
-    "https://cms-cdn-bucket-prod.lionmultiverse.com/Media/ANANTHANKAADUY_2026_MEN_Portrait_poster_310534853a.jpg",
     "https://cms-cdn-bucket-prod.lionmultiverse.com/Media/THANALY_2025_MEN_Portrait_poster_55269fbc5e.jpg",
-    "https://cms-cdn-bucket-prod.lionmultiverse.com/Media/M4_MMOTIVEFORMURDERY_2026_MEN_Portrait_poster_0dc1d36f77.jpg"
+    "https://cms-cdn-bucket-prod.lionmultiverse.com/Media/ANANTHANKAADUY_2026_MEN_Portrait_poster_310534853a.jpg",
+    "https://cms-cdn-bucket-prod.lionmultiverse.com/Media/M4_MMOTIVEFORMURDERY_2026_MEN_Portrait_poster_0dc1d36f77.jpg",
+    "https://cms-cdn-bucket-prod.lionmultiverse.com/Media/ANOMIEY_2026_MML_Portrait_poster_0461d05e4a.jpg",
+    "https://cms-cdn-bucket-prod.lionmultiverse.com/Media/BLACKBOXY_2026_MEN_Portrait_poster_0998829382.jpg"
   ]
 }
